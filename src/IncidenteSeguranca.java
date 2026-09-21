@@ -3,7 +3,7 @@ public class IncidenteSeguranca {
     private String titulo;
     private String sistemaAfetado;
     private int nivelSeveridade;
-    private double prejuizoEstimado;
+    double prejuizoEstimado;
 
     public IncidenteSeguranca() {
     }
@@ -11,8 +11,8 @@ public class IncidenteSeguranca {
     public IncidenteSeguranca(String titulo, String sistemaAfetado, int nivelSeveridade, double prejuizoEstimado) {
         this.titulo = titulo;
         this.sistemaAfetado = sistemaAfetado;
-        this.nivelSeveridade = nivelSeveridade;
-        this.prejuizoEstimado = prejuizoEstimado;
+        setNivelSeveridade(nivelSeveridade);
+        setPrejuizoEstimado(prejuizoEstimado);
     }
 
     public String getTitulo() {
@@ -36,7 +36,13 @@ public class IncidenteSeguranca {
     }
 
     public void setNivelSeveridade(int nivelSeveridade) {
-        this.nivelSeveridade = nivelSeveridade;
+        if (nivelSeveridade >= 1 && nivelSeveridade <=5){
+            this.nivelSeveridade = nivelSeveridade;
+        } else {
+            throw new IllegalArgumentException(
+                    "O nivel de severidade deve estar entre 1 e 5"
+            );
+        }
     }
 
     public double getPrejuizoEstimado() {
@@ -44,7 +50,33 @@ public class IncidenteSeguranca {
     }
 
     public void setPrejuizoEstimado(double prejuizoEstimado) {
-        this.prejuizoEstimado = prejuizoEstimado;
+        if (prejuizoEstimado >= 0) {
+            this.prejuizoEstimado = prejuizoEstimado;
+        } else {
+            throw new IllegalArgumentException(
+                    "O prejuizo estimado nao pode ser negativo"
+            );
+        }
+    }
+
+    public int calcularNivelRisco(){
+        return nivelSeveridade * 10;
+    }
+
+    public double calcularNivelRisco(double fatorImpacto) {
+        return calcularNivelRisco() * fatorImpacto; //sobrecarga de metodo.
+    }
+
+    public double calcularNivelRisco(double fatorImpacto, double fatorUrgencia) {
+        return calcularNivelRisco(fatorImpacto) * fatorUrgencia; //reutilizando logica anterior, outra sobrecarga de metodo.
+    }
+
+    public void exibirInformacoes() {
+        System.out.println("Titulo: " + titulo);
+        System.out.println("Sistema afetado: " + sistemaAfetado);
+        System.out.println("Nivel de severidade: " + nivelSeveridade);
+        System.out.println("Prejuizo estimado: R$ " + prejuizoEstimado);
+        System.out.println("Nivel de risco: " + calcularNivelRisco());
     }
 
     @Override
